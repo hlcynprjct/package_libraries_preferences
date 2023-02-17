@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.android.settings.custom.preference;
+package com.android.settings.halcyon.preference;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -22,12 +22,13 @@ import android.util.AttributeSet;
 import android.provider.Settings;
 
 
-public class SystemSettingListPreference extends SelfRemovingListPreference {
-    public SystemSettingListPreference(Context context, AttributeSet attrs, int defStyle) {
+public class SecureSettingListPreference extends SelfRemovingListPreference {
+
+    public SecureSettingListPreference(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 
-    public SystemSettingListPreference(Context context, AttributeSet attrs) {
+    public SecureSettingListPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
@@ -37,17 +38,17 @@ public class SystemSettingListPreference extends SelfRemovingListPreference {
 
     @Override
     protected boolean isPersisted() {
-        return Settings.System.getString(getContext().getContentResolver(), getKey()) != null;
+        return Settings.Secure.getString(getContext().getContentResolver(), getKey()) != null;
     }
 
     @Override
     protected void putString(String key, String value) {
-        Settings.System.putString(getContext().getContentResolver(), key, value);
+        Settings.Secure.putString(getContext().getContentResolver(), key, value);
     }
 
     @Override
     protected String getString(String key, String defaultValue) {
-        String result = Settings.System.getString(getContext().getContentResolver(), key);
+        String result = Settings.Secure.getString(getContext().getContentResolver(), key);
         return result == null ? defaultValue : result;
     }
 }

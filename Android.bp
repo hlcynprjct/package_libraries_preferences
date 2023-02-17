@@ -1,6 +1,6 @@
 android_library {
 
-    name: "custom-preference",
+    name: "halcyon-preference-lib",
 
     optimize: {
         enabled: false,

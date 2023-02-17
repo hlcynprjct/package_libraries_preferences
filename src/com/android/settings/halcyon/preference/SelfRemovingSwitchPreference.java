@@ -14,36 +14,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.android.settings.custom.preference;
+package com.android.settings.halcyon.preference;
 
 import android.content.Context;
 import android.util.AttributeSet;
 
-import androidx.preference.ListPreference;
 import androidx.preference.PreferenceDataStore;
 import androidx.preference.PreferenceViewHolder;
+import androidx.preference.SwitchPreference;
 
 /**
- * A Preference which can automatically remove itself from the hierarchy
+ * A SwitchPreference which can automatically remove itself from the hierarchy
  * based on constraints set in XML.
  */
-public abstract class SelfRemovingListPreference extends ListPreference {
+public abstract class SelfRemovingSwitchPreference extends SwitchPreference {
 
     private final ConstraintsHelper mConstraints;
 
-    public SelfRemovingListPreference(Context context, AttributeSet attrs, int defStyle) {
+    public SelfRemovingSwitchPreference(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         mConstraints = new ConstraintsHelper(context, attrs, this);
         setPreferenceDataStore(new DataStore());
     }
 
-    public SelfRemovingListPreference(Context context, AttributeSet attrs) {
+    public SelfRemovingSwitchPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
         mConstraints = new ConstraintsHelper(context, attrs, this);
         setPreferenceDataStore(new DataStore());
     }
 
-    public SelfRemovingListPreference(Context context) {
+    public SelfRemovingSwitchPreference(Context context) {
         super(context);
         mConstraints = new ConstraintsHelper(context, null, this);
         setPreferenceDataStore(new DataStore());
@@ -70,37 +70,37 @@ public abstract class SelfRemovingListPreference extends ListPreference {
     }
 
     protected abstract boolean isPersisted();
-    protected abstract void putString(String key, String value);
-    protected abstract String getString(String key, String defaultValue);
+    protected abstract void putBoolean(String key, boolean value);
+    protected abstract boolean getBoolean(String key, boolean defaultValue);
 
     @Override
     protected void onSetInitialValue(boolean restorePersistedValue, Object defaultValue) {
-        final String value;
+        final boolean checked;
         if (!restorePersistedValue || !isPersisted()) {
             if (defaultValue == null) {
                 return;
             }
-            value = (String) defaultValue;
+            checked = (boolean) defaultValue;
             if (shouldPersist()) {
-                persistString(value);
+                persistBoolean(checked);
             }
         } else {
             // Note: the default is not used because to have got here
             // isPersisted() must be true.
-            value = getString(getKey(), null /* not used */);
+            checked = getBoolean(getKey(), false /* not used */);
         }
-        setValue(value);
+        setChecked(checked);
     }
 
     private class DataStore extends PreferenceDataStore {
         @Override
-        public void putString(String key, String value) {
-            SelfRemovingListPreference.this.putString(key, value);
+        public void putBoolean(String key, boolean value) {
+            SelfRemovingSwitchPreference.this.putBoolean(key, value);
         }
 
         @Override
-        public String getString(String key, String defaultValue) {
-            return SelfRemovingListPreference.this.getString(key, defaultValue);
+        public boolean getBoolean(String key, boolean defaultValue) {
+            return SelfRemovingSwitchPreference.this.getBoolean(key, defaultValue);
         }
     }
 }
